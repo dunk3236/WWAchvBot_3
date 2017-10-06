@@ -186,7 +186,7 @@ namespace WWAchvBot_3
         }
 
 
-        [Command(Trigger = "random", DevOnly = true)]
+        [Command(Trigger = "maint", DevOnly = true)]
         public static void Maint(Message msg, string[] args)
         {
             Maintenance = !Maintenance;

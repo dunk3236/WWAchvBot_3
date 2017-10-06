@@ -205,7 +205,7 @@ namespace WWAchvBot_3
             Bot.Reply($"{Methods.GetString(msg, "LynchorderReset")} {msg.From.GetLinkedName()}", msg);
         }
 
-        [Command(Trigger = "pinglist", InGameOnly = true)]
+        [Command(Trigger = "#ping", InGameOnly = true)]
         public static void Pinglist(Message msg, string[] args)
         {
             var g = Games.FirstOrDefault(x => x.GroupId == msg.Chat.Id);
