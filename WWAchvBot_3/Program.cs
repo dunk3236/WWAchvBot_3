@@ -113,6 +113,7 @@ namespace WWAchvBot_3
 
         public static void Restart()
         {
+            Bot.Send("No games are running anymore, starting the newest version of the bot!", testgroup.Id);
             var dir = System.IO.Directory.EnumerateDirectories($"{BasePath}Running").OrderBy(x => x).LastOrDefault();
             try
             {
