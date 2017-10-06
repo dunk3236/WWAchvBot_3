@@ -231,6 +231,7 @@ namespace WWAchvBot_3
 
             var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
             var success = txt.Contains("0 fehlerhaft");
+            File.Delete($"{BasePath}Upgrade\\BuildResults.txt");
 
             if (success)
             {
