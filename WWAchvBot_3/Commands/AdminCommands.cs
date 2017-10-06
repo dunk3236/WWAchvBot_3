@@ -215,9 +215,9 @@ namespace WWAchvBot_3
         {
 #if RELEASE
             var text = "UPGRADING" + Environment.NewLine + Environment.NewLine;
-            var m = Bot.Reply(text + "<b>PULLING AND BUILDING BOT</b>", msg);
+            var m = Bot.Reply(text + "<b>Pulling and upgrading bot...</b>", msg);
 
-            Process.Start($"{BasePath}Upgrade\\Upgrade.bat").WaitForExit();;
+            Process.Start($"{BasePath}Upgrade\\GitPull.bat").WaitForExit();
 
             var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
             var success = txt.Contains("0 fehlerhaft");
