@@ -227,7 +227,9 @@ namespace WWAchvBot_3
             text += "Packages restored." + Environment.NewLine;
             Bot.Edit(m, text + "<b>Building release...</b>");
 
+            Bot.Send("Starting batch file: " + $"{BasePath}Upgrade\\BuildSolution.bat", Devs[0]);
             Process.Start($"{BasePath}Upgrade\\BuildSolution.bat").WaitForExit();
+            Bot.Send("Exited batch file", Devs[0]);
 
             var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
             var success = txt.Contains("0 fehlerhaft");
@@ -239,6 +241,7 @@ namespace WWAchvBot_3
                 Bot.Edit(m, text + "<b>Copying release to bot...</b>");
                 var path = BasePath + "Running\\" + DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss");
 
+                System.IO.Directory.CreateDirectory(path);
                 Process.Start("xcopy.exe", $"/E {BasePath}Source\\WWAchvBot_3\\WWAchvBot_3\\bin\\Release {path}").WaitForExit();
 
                 text += "Release copied to bot. It will be run after all games stopped. Path:" + Environment.NewLine + Environment.NewLine + path + Environment.NewLine + Environment.NewLine + "<b>Operation complete.</b>";
