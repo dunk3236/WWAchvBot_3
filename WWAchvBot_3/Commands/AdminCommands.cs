@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineKeyboardButtons;
 using Telegram.Bot.Types.ReplyMarkups;
 using WWAchvBot_3.Attributes;
+using File = System.IO.File;
 using static WWAchvBot_3.Program;
 
 namespace WWAchvBot_3
@@ -27,12 +29,16 @@ namespace WWAchvBot_3
             else Bot.Reply("This is the pinned message.", pin);
         }
 
+#if DEBUG
         [Command(Trigger = "killbot", DevOnly = true)]
         public static void KillBot(Message msg, string[] args)
         {
             Bot.Reply("Killing self... But don't worry, Jehan, I'm still alive :)", msg);
+            Games.ForEach(x => x.Stopped = true);
+            Games.ForEach(x => x.UpdatePin());
             Environment.Exit(0);
         }
+#endif
 
         [Command(Trigger = "db", DevOnly = true)]
         public static void SQLite(Message msg, string[] args)
@@ -185,14 +191,6 @@ namespace WWAchvBot_3
             Bot.Reply("Set which language?", msg, replyMarkup: markup);
         }
 
-
-        [Command(Trigger = "maint", DevOnly = true)]
-        public static void Maint(Message msg, string[] args)
-        {
-            Maintenance = !Maintenance;
-            Bot.Reply($"Maintenance mode: <code>{Maintenance}</code>", msg);
-        }
-
         [Command(Trigger = "userinfo", AdminOnly = true)]
         public static void UserInfo(Message msg, string[] args)
         {
@@ -210,6 +208,72 @@ namespace WWAchvBot_3
                 $" - Status: {status}"
 
             , msg);
+        }
+
+        [Command(Trigger = "upgrade", DevOnly = true)]
+        public static void Upgrade(Message msg, string[] args)
+        {
+#if RELEASE
+            var text = "UPGRADING" + Environment.NewLine + Environment.NewLine;
+            var m = Bot.Reply(text + "<b>Pulling Git...</b>", msg);
+
+            Process.Start($"{BasePath}Upgrade\\GitPull.bat").WaitForExit();
+
+            text += "Git pulled." + Environment.NewLine;
+            Bot.Edit(m, text + "<b>Restoring nuget packages...</b>");
+
+            Process.Start($"{BasePath}Upgrade\\NugetRestore.bat").WaitForExit();
+
+            text += "Packages restored." + Environment.NewLine;
+            Bot.Edit(m, text + "<b>Building release...</b>");
+
+            Process.Start($"{BasePath}Upgrade\\BuildSolution.bat").WaitForExit();
+
+            var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
+            var success = txt.Contains("0 fehlerhaft");
+
+            if (success)
+            {
+                text += "Release built." + Environment.NewLine;
+                Bot.Edit(m, text + "<b>Copying release to bot...</b>");
+                var path = BasePath + "Running\\" + DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss");
+
+                Process.Start("xcopy.exe", $"/E {BasePath}Source\\WWAchvBot_3\\WWAchvBot_3\\bin\\Release {path}").WaitForExit();
+
+                text += "Release copied to bot. It will be run after all games stopped. Path:" + Environment.NewLine + Environment.NewLine + path + Environment.NewLine + Environment.NewLine + "<b>Operation complete.</b>";
+                Bot.Edit(m, text);
+                UpdateBot = true;
+
+                if (Games.Count == 0)
+                {
+                    Restart();
+                }
+            }
+            else
+            {
+                text += "<b>Failed to build release!</b>" + Environment.NewLine + Environment.NewLine + "Check the output for details:";
+                Bot.Edit(m, text);
+                Bot.Reply(txt, m);
+            }
+
+#else
+            Bot.Reply("Can only upgrade when running on release!", msg);
+#endif
+
+        }
+
+        [Command(Trigger = "unupdate", DevOnly = true)]
+        public static void UnUpdate(Message msg, string[] args)
+        {
+            if (UpdateBot)
+            {
+                UpdateBot = false;
+                Bot.Reply("The upgrading was cancelled.", msg);
+            }
+            else
+            {
+                Bot.Reply("The bot wasn't even about to upgrade!", msg);
+            }
         }
     }
 

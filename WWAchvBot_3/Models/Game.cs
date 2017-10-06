@@ -132,6 +132,17 @@ namespace WWAchvBot_3
             return res;
         }
 
+        public void Stop()
+        {
+            Stopped = true;
+            UpdatePin();
+            if (DefaultPin != null) Bot.Pin(DefaultPin);
+            else Bot.RemovePin(Pinmessage.Chat.Id);
+            Games.Remove(this);
+
+            if (UpdateBot && Games.Count == 0) Restart();
+        }
+
         public bool IsAchievable(Player player, string achv)
         {
             if (player.User.Achievements.Contains(achv)) return false;

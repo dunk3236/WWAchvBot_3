@@ -33,7 +33,6 @@ namespace WWAchvBot_3
                 return;
             }
             if (DateTime.UtcNow.AddSeconds(-5) > msg.Date.ToUniversalTime()) return;
-            if (Maintenance && msg.Chat.Id != testgroup.Id && !Games.Any(x => x.GroupId == msg.Chat.Id) && !Admins.Contains(msg.From.Id)) return;
 
             if (msg.Chat.Type == ChatType.Supergroup)
             {

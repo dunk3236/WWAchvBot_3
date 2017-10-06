@@ -26,6 +26,12 @@ namespace WWAchvBot_3
         [Command(Trigger = "startgame", InGroupOnly = true)]
         public static void Startgame(Message msg, string[] args)
         {
+            if (UpdateBot)
+            {
+                Bot.Reply(Methods.GetString(msg, ""), msg);
+                return;
+            }
+
             if (Games.Any(x => x.GroupId == msg.Chat.Id))
             {
                 Bot.Reply(Methods.GetString(msg, "AlreadyPlaying"), msg);
@@ -409,11 +415,8 @@ namespace WWAchvBot_3
                 return;
             }
 
-            g.Stopped = true;
-            g.UpdatePin();
-            if (g.DefaultPin != null) Bot.Pin(g.DefaultPin);
-            else Bot.RemovePin(chatid);
-            Games.Remove(g);
+            g.Stop();
+
             Bot.Send($"{call.From.FirstName} {Methods.GetString(call.Message, "StoppedGame")}", chatid);
         }
     }

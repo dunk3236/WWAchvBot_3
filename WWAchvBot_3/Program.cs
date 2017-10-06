@@ -23,7 +23,7 @@ namespace WWAchvBot_3
         public static List<BotUser> Users = new List<BotUser>();
         public const long TranslationGroup = -1001142136211;
 
-        public static bool Maintenance = true;
+        public static bool UpdateBot = false;
         public static List<Game> Games = new List<Game>();
 
         static void Main(string[] args)
@@ -109,6 +109,22 @@ namespace WWAchvBot_3
             {
                 e.Log(true);
             }
+        }
+
+        public static void Restart()
+        {
+            var dir = System.IO.Directory.EnumerateDirectories($"{BasePath}Running").OrderBy(x => x).LastOrDefault();
+            try
+            {
+                Bot.Api.StopReceiving();
+                System.Diagnostics.Process.Start(dir + "\\WWAchvBot_3.exe");
+            }
+            catch
+            {
+                Bot.Send("COULDN'T START UP THE NEWEST VERSION! @Olgabrezel", testgroup.Id);
+            }
+
+            Environment.Exit(0);
         }
 
         #region Bot
