@@ -68,8 +68,6 @@ namespace WWAchvBot_3
         public Game(Message Pin)
         {
             DefaultPin = Bot.GetPinned(Pin.Chat.Id);
-            if (DefaultPin == null) Bot.Send("<b>Defaultpin: NULL</b>", Pin.Chat.Id);
-            else Bot.Reply("<b>Defaultpin: THIS</b>", DefaultPin);
             Pinmessage = Pin;
             GroupId = Pin.Chat.Id;
             Bot.Pin(Pinmessage);

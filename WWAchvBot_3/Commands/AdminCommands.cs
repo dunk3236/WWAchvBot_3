@@ -215,21 +215,9 @@ namespace WWAchvBot_3
         {
 #if RELEASE
             var text = "UPGRADING" + Environment.NewLine + Environment.NewLine;
-            var m = Bot.Reply(text + "<b>Pulling Git...</b>", msg);
+            var m = Bot.Reply(text + "<b>PULLING AND BUILDING BOT</b>", msg);
 
-            Process.Start($"{BasePath}Upgrade\\GitPull.bat").WaitForExit();
-
-            text += "Git pulled." + Environment.NewLine;
-            Bot.Edit(m, text + "<b>Restoring nuget packages...</b>");
-
-            Process.Start($"{BasePath}Upgrade\\NugetRestore.bat").WaitForExit();
-
-            text += "Packages restored." + Environment.NewLine;
-            Bot.Edit(m, text + "<b>Building release...</b>");
-
-            Bot.Send("Starting batch file: " + $"{BasePath}Upgrade\\BuildSolution.bat", Devs[0]);
-            Process.Start($"{BasePath}Upgrade\\BuildSolution.bat").WaitForExit();
-            Bot.Send("Exited batch file", Devs[0]);
+            Process.Start($"{BasePath}Upgrade\\Upgrade.bat").WaitForExit();;
 
             var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
             var success = txt.Contains("0 fehlerhaft");
@@ -237,7 +225,7 @@ namespace WWAchvBot_3
 
             if (success)
             {
-                text += "Release built." + Environment.NewLine;
+                text += "Git pulled, Release built." + Environment.NewLine;
                 Bot.Edit(m, text + "<b>Copying release to bot...</b>");
                 var path = BasePath + "Running\\" + DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss");
 
