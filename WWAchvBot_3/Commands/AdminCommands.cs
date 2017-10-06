@@ -124,6 +124,14 @@ namespace WWAchvBot_3
                         string.Join(Environment.NewLine, lang.Strings.Keys.Where(x => x.Length > 50)) + Environment.NewLine + Environment.NewLine;
                 }
 
+                if (lang.Strings.Any(x => string.IsNullOrEmpty(x.Value)))
+                {
+                    exception += "Strings with empty values:" + Environment.NewLine +
+                        string.Join(Environment.NewLine, lang.Strings.Where(x => string.IsNullOrEmpty(x.Key) || string.IsNullOrEmpty(x.Value)).Select(x => x.Key)) + Environment.NewLine + Environment.NewLine;
+                }
+
+                if (lang.Strings.Any(x => string.IsNullOrEmpty(x.Key))) exception += "Strings with empty keys present!" + Environment.NewLine + Environment.NewLine;
+
                 if (!string.IsNullOrEmpty(exception))
                 {
                     Bot.Reply(exception, msg);
@@ -217,7 +225,7 @@ namespace WWAchvBot_3
             var text = "UPGRADING" + Environment.NewLine + Environment.NewLine;
             var m = Bot.Reply(text + "<b>Pulling and upgrading bot...</b>", msg);
 
-            Process.Start($"{BasePath}Upgrade\\GitPull.bat").WaitForExit();
+            Process.Start($"{BasePath}Upgrade\\Upgrade.bat").WaitForExit();
 
             var txt = File.ReadAllText($"{BasePath}Upgrade\\BuildResults.txt");
             var success = txt.Contains("0 fehlerhaft");
