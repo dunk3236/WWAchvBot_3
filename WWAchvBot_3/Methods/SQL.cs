@@ -171,7 +171,7 @@ namespace WWAchvBot_3
 
             while (reader.Read())
             {
-                groups.Add(new AchvGroup((long)reader[0], (string)reader[1], (string)reader[2], Language.All.FirstOrDefault(x => x.Name == (string)reader[2]) ?? Language.English));
+                groups.Add(new AchvGroup((long)reader[0], (string)reader[1], (string)reader[2], Language.All.FirstOrDefault(x => x.Name == (string)reader[3]) ?? Language.English));
             }
 
             conn.Close();

@@ -186,14 +186,14 @@ namespace WWAchvBot_3
         }
 
         [Command(Trigger = "grouplang", InGroupOnly = true, AdminOnly = true)]
-        public static void Setlang(Message msg, string[] args)
+        public static void GroupLang(Message msg, string[] args)
         {
             var buttons = new List<InlineKeyboardButton[]>();
             foreach (var lang in Language.All.Select(x => x.Name))
             {
-                buttons.Add(new InlineKeyboardButton[] { new InlineKeyboardCallbackButton(lang, $"setlang|{msg.Chat.Id}|{lang}") });
+                buttons.Add(new InlineKeyboardButton[] { new InlineKeyboardCallbackButton(lang, $"grouplang|{msg.Chat.Id}|{lang}") });
             }
-            buttons.Add(new InlineKeyboardButton[] { new InlineKeyboardCallbackButton("Abort", $"setlang|{msg.Chat.Id}|abort") });
+            buttons.Add(new InlineKeyboardButton[] { new InlineKeyboardCallbackButton("Abort", $"grouplang|{msg.Chat.Id}|abort") });
             var markup = new InlineKeyboardMarkup(buttons.ToArray());
 
             Bot.Reply("Set which language?", msg, replyMarkup: markup);
@@ -335,8 +335,8 @@ namespace WWAchvBot_3
             }
         }
 
-        [Callback(Trigger = "setlang", AdminOnly = true)]
-        public static void Setlang(CallbackQuery call, string[] args)
+        [Callback(Trigger = "grouplang", AdminOnly = true)]
+        public static void GroupLang(CallbackQuery call, string[] args)
         {
             var chatid = long.Parse(args[1].Split('|')[0]);
             var grp = Groups.FirstOrDefault(x => x.Id == chatid);
