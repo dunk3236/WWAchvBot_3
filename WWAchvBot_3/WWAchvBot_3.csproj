@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Methods\GameClearer.cs" />
     <Compile Include="Models\AchvGroup.cs" />
     <Compile Include="Commands\AdminCommands.cs" />
     <Compile Include="Models\Attributes.cs" />
