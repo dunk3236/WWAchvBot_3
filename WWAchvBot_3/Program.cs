@@ -24,6 +24,8 @@ namespace WWAchvBot_3
         public static List<BotUser> Users = new List<BotUser>();
         public const long TranslationGroup = -1001142136211;
 
+        private static Thread GameCleaner = new Thread(GameClearer.Run);
+
         public static bool UpdateBot = false;
         public static List<Game> Games = new List<Game>();
 
@@ -102,7 +104,11 @@ namespace WWAchvBot_3
 
                 // Load Admins
                 Admins = SQL.ReadAdmins();
+
+                // Start Game Cleaner
+                GameCleaner.Start();
                 #endregion
+
 
                 Bot.Api.StartReceiving();
                 Bot.Send($"<b>Started up with version {Version}!</b>", testgroup.Id);
@@ -121,6 +127,7 @@ namespace WWAchvBot_3
             try
             {
                 Bot.Api.StopReceiving();
+                GameCleaner.Abort();
                 System.Diagnostics.Process.Start(dir + "\\WWAchvBot_3.exe");
             }
             catch

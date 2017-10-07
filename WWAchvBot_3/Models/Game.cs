@@ -18,6 +18,7 @@ namespace WWAchvBot_3
         public long GroupId;
         public bool Started = false;
         public bool Stopped = false;
+        public DateTime LastUpdate;
         public string Lynchorder = "$lynchorder";
 
         public List<Player> AlivePlayers;
@@ -71,6 +72,7 @@ namespace WWAchvBot_3
             Pinmessage = Pin;
             GroupId = Pin.Chat.Id;
             Bot.Pin(Pinmessage);
+            LastUpdate = DateTime.UtcNow;
             UpdatePin();
         }
 

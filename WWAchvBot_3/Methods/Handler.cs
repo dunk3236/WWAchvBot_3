@@ -44,6 +44,10 @@ namespace WWAchvBot_3
                         grp.Name = msg.Chat.Title.FormatHTML();
                         SQL.ChangeGroup(grp);
                     }
+                    if (Games.Any(x => x.GroupId == grp.Id))
+                    {
+                        Games.First(x => x.GroupId == grp.Id).LastUpdate = DateTime.UtcNow;
+                    }
                 }
 
                 var text = msg.Text;
