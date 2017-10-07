@@ -13,6 +13,7 @@ namespace WWAchvBot_3
 {
     class Program
     {
+        public const string Version = "3.0.1";
         public const string BasePath = "C:\\Olgabrezel\\AchvBot_3\\";
         public static readonly int[] Devs = new[] { 295152997 };
         public static List<long> Admins = new List<long>();
@@ -30,6 +31,8 @@ namespace WWAchvBot_3
         {
             try
             {
+                AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+
                 if (!System.IO.File.Exists(BasePath + "Errors.txt"))
                 {
                     var fs = System.IO.File.Create(BasePath + "Errors.txt");
@@ -102,7 +105,7 @@ namespace WWAchvBot_3
                 #endregion
 
                 Bot.Api.StartReceiving();
-                Bot.Send("<b>Started up!</b>", testgroup.Id);
+                Bot.Send($"<b>Started up with version {Version}!</b>", testgroup.Id);
                 Thread.Sleep(-1);
             }
             catch (Exception e)
@@ -126,6 +129,13 @@ namespace WWAchvBot_3
             }
 
             Environment.Exit(0);
+        }
+
+        public static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var exc = (Exception)e.ExceptionObject;
+            exc.Log(true);
+            Bot.Send("@Olgabrezel SHIT HAPPENED! Unhandled exception occured. Details see previous message.", testgroup.Id);
         }
 
         #region Bot

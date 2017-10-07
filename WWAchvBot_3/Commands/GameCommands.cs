@@ -28,7 +28,7 @@ namespace WWAchvBot_3
         {
             if (UpdateBot)
             {
-                Bot.Reply(Methods.GetString(msg, ""), msg);
+                Bot.Reply(Methods.GetString(msg, "CantStartGameUpdating"), msg);
                 return;
             }
 

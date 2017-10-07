@@ -317,6 +317,12 @@ namespace WWAchvBot_3
                 return;
             }
 
+            if (call.Message.ReplyToMessage == null)
+            {
+                Bot.Edit(call.Message, call.Message.Text + Environment.NewLine + "<b>File was deleted, can't upload!</b>");
+                Bot.AnswerCallback(call, "Aborted.");
+            }
+
             var file = Bot.Api.GetFileAsync(call.Message.ReplyToMessage.Document.FileId).Result;
             using (var sr = new StreamReader(file.FileStream))
             {
